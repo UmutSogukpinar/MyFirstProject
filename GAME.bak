@@ -182,7 +182,6 @@
 ;                                                                 ******* CAR OBJECT *******
 ; =======================================================================================================================================================================
 
-;YUNUS'S PART:
 
 ; purpose: update the position of the car
 ; contract: newPosCar: c(theCar) key(key) -> position
@@ -222,7 +221,6 @@
 ;                                                          *********** OBSTACLE OBJECT **********
 ; =======================================================================================================================================================================
 
-;YUNUS'S PART:
 
 ; purpose: update the position with the velocity
 ; contract: newPosObs: pos(position) vel(velocity) -> position
@@ -254,8 +252,6 @@
 ; function:
 (define (designImObs obs) (text (number->string (obstacle-value obs)) 40 "red"))
 
-
-;UMUT'S PART:
 
 ; purpose: updating velocities, positions, value of obstacle and number of figure with each new tour
 ; contract: updateVelObs: c(theCar) obs(obstacle) fig(figure) -> obstacle
@@ -315,8 +311,6 @@
 ; ======================================================================================================================================================================
 ;                                                    **************  FIGURE ***************
 ; =======================================================================================================================================================================
-
-;YUNUS'S PART:
 
 ; purpose: updating figure
 ; contract: updateFigure: c(theCar) fig(figure) obs1(obstacle) obs2(obstacle) obs3(obstacle) -> figure
@@ -413,7 +407,6 @@
 ;                                                ************ REACTİON BETWEEN CAR AND OBSTACLE ************
 ; =======================================================================================================================================================================
 
-;YUNUS'S PART:
 
 ; purpose: check whether 
 ; contract: isCollided: c(car) ob(obstacle) -> boolean 
@@ -440,9 +433,6 @@
 
                                 [else #false]))
 
-
-;UMUT'S PART:
-
 ; purpose: check whether ball and bar is collided or not
 ; contract: isTrue: c(theCar) ob(obstacle) fig(figure) -> number 
 ; test:
@@ -468,7 +458,6 @@
 ;                                        ******************** CAR GAME SCORE AND SCOREBOARD **********************
 ; ====================================================================================================================================================================================
 
-;YUNUS'S PARTS:
 
 ; purpose: update the game score with interaction between car and right obstacle
 ; contract: updateScore: g(gameCar) -> number
@@ -528,7 +517,6 @@
 ;                                                    ********* CAR GAME BACKGROUND DESIGNING  *********
 ; ==================================================================================================================================================================================
 
-;YUNUS'S PARTS:
 
 ;designing sky on the game
 (define sky (rectangle 800 380 "solid" "light blue"))
@@ -577,7 +565,6 @@
 ;                                                         *********** CAR GAME GAME-OVER SCENE **********
 ; ==================================================================================================================================================================================
 
-;YUNUS'S PART:
 
 ; purpose: showing the score on game-over scene
 ; contract: OverSceneDraw: gOvSceCar(gameOverSceneCar) gaC(gameCar) -> image
@@ -605,7 +592,6 @@
 ;                                                      *********** CAR GAME UPDATE FUNCTIONS **********
 ; ==================================================================================================================================================================================
 
-;YUNUS'S PART:
 
 ; purpose: drawing the car into the finalScene
 ; contract: scene1: g(gameCar) -> image
@@ -701,8 +687,6 @@
 ; ======================================================================================================================================================================
 ;                                              ************* MOUSE + GAME-SCENE (AS A PROPORTY) + DRAGGİNG ************
 ; =======================================================================================================================================================================
-
-;BAYRAM'S PART:
 
 ; purpose: check whether the point on the button or not
 ; contract: isInButton: b(button)  x(number) y(number) -> boolean
@@ -842,7 +826,6 @@
 ; contract: mouseUpdate: ga(GAME) x(number) y(number) mo(mouseEvent)-> GAME
 ; test:
 
-;UMUT'S PART:
 
 (check-expect (mouseUpdate (make-GAME
                             (make-gameMainMenu (rectangle 800 800 "outline" "yellow") (make-button (make-position 300 300) (rectangle 30 30 "outline" "black")) (make-button (make-position 500 500) (rectangle 30 30 "outline" "black")) (make-button (make-position 700 700) (rectangle 30 30 "outline" "black")))
@@ -918,7 +901,6 @@
                (make-exitScene (empty-scene 800 800))
                "puzzleGameScene"))
 
-;BAYRAM'S PART:
 
 (check-expect (mouseUpdate (make-GAME
                             (make-gameMainMenu (rectangle 800 800 "outline" "yellow") (make-button (make-position 300 300) (rectangle 30 30 "outline" "black")) (make-button (make-position 500 500) (rectangle 30 30 "outline" "black")) (make-button (make-position 700 700) (rectangle 30 30 "outline" "black")))
@@ -1310,8 +1292,6 @@
                                   [else (make-GAME (GAME-menu ga) (GAME-carGame ga) (GAME-puzzGame ga) (GAME-gOvCar ga) (GAME-gOvPuzzle ga) (GAME-exit ga) (GAME-scene ga))]))
                                        
 
-;UMUT'S PART:
-
 ; purpose: changing car game scene to game over scene of the car due to wrong answer
 ; contract: sceneChanger: ga(GAME) -> string
 ; test:
@@ -1377,7 +1357,6 @@
 ;                                                   ************* PUZZLE REACTIONS  **************
 ; ==================================================================================================================================================================================
 
-;BAYRAM'S PART:
 
 ; purpose: calculating the distance between the positions
 ; contract: distCalc: pos1(position) pos2(position) -> number
@@ -1412,7 +1391,6 @@
 ;                                                    ********* PUZZLE GAME BACKGROUND DESIGNING  *********
 ; ==================================================================================================================================================================================
 
-;BAYRAM'S PART:
 
 ; purpose: drawing the puzzle game
 ; contract: finalScenePuzzle: ga(puzzleGame) -> image
@@ -1448,7 +1426,6 @@
 ;                                                 *********** PUZZLE GAME GAME-OVER SCENE BACKGROUND DESIGNING  ***********
 ; ==================================================================================================================================================================================
 
-;BAYRAM'S PART:
 
 ;adding the image of 100 on game over scene of puzzle game
 (define finalScenePuzzleGameOver (place-image hundred
@@ -1456,13 +1433,10 @@
                                               imGameOverPuzz))
                                               
 
-
-
 ; ====================================================================================================================================================================
 ;                                                        ********** FINAL VERSİON OF THE GAME *********
 ; ====================================================================================================================================================================
 
-;YUNUS'S PART:
 
 (define finalVersionOfGame
 
@@ -1513,8 +1487,6 @@
 ;******************************************************************** GAME UPDATE FUNCTİONS ********************************************************************************************
 ;=======================================================================================================================================================================
 ;======================================================================================================================================================================
-
-;YUNUS'S PART:
 
 ; purpose: draw the game  into a scene
 ; contract: finalDraw: game(GAME) -> image
@@ -1582,9 +1554,7 @@
                            [(string=? "puzzleGameScene" (GAME-scene game))
                             (finalScenePuzzle           (GAME-puzzGame game))]))
 
-                           
 
-;UMUT'S PART:
 
 ; purpose: update the game wrt user's key input
 ; contract: updateKeyCar: g(GAME) k(key) -> GAME
@@ -1751,8 +1721,6 @@
       (sceneChanger ga)
       )]))
 
-
-;UMUT'S PART:
 
 ; purpose: update the game wrt time
 ; contract: updateTickCar: ga(GAME) -> GAME
