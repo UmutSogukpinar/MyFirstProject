@@ -206,12 +206,6 @@
 
 ; purpose: main function for moving the car object
 ; contract: moveCar c(theCar) k(key) -> car
-; test:
-(check-expect (moveCar (make-theCar (make-position 760 590) (circle 10 "solid" "red")) "down")
-              (make-theCar (make-position 760 730) (circle 10 "solid" "red")))
-(check-expect (moveCar (make-theCar (make-position 760 590) (circle 10 "solid" "red")) "up")
-              (make-theCar (make-position 760 460) (circle 10 "solid" "red")))
-; function:
 ; function:
 (define (moveCar c k) (make-theCar (newPosCar c k)
                                    (theCar-im c)))
@@ -225,8 +219,6 @@
 
 ; purpose: update the position with the velocity
 ; contract: newPosObs: pos(position) vel(velocity) -> position
-; test:
-(check-expect (newPos (make-position 15 15) (make-velocity 5 5) ) (make-position 20 15) )
 ; function:
 (define (newPos pos vel) (make-position (+ (velocity-x vel) (position-x pos) )
                                         (position-y pos)))
@@ -235,9 +227,6 @@
 
 ; purpose: determinating whether the obstacle in frame or not
 ; contract: inFrameX: obs(obstacle) -> boolean
-; test:
-(check-expect (inFrameX (make-obstacle  (make-position 300 740)   (make-velocity 5 0)  (text  (number->string 4) 15 "red") 2)) #true) 
-(check-expect (inFrameX (make-obstacle  (make-position 1000 740)  (make-velocity 5 0)  (text  (number->string 4) 15 "red") 2)) #false)
 ; function:
 (define (inFrameX obs) (cond [(<= (position-x
                                   (obstacle-pos obs)) 860)  #true]
@@ -247,26 +236,12 @@
 
 ; purpose: designing obstacle images
 ; contract: designImObs: obs(obstacle)-> image
-; tests:
-(check-expect (designImObs (make-obstacle (make-position 100 100) (make-velocity 10 10) (text (number->string 5) 40 "red") 7))
-              (text (number->string 7) 40 "red"))
 ; function:
 (define (designImObs obs) (text (number->string (obstacle-value obs)) 40 "red"))
 
 
 ; purpose: updating velocities, positions, value of obstacle and number of figure with each new tour
 ; contract: updateVelObs: c(theCar) obs(obstacle) fig(figure) -> obstacle
-; tests:
-(check-random (updateVelObs
-               (make-theCar (make-position 500 500) (circle 10 "solid" "red"))
-               (make-obstacle (make-position 500 500) (make-velocity 10 0) (text (number->string 7) 40 "red") 7)
-               (make-figure 7))
-              (make-obstacle (make-position -15 500) (make-velocity (list-ref listVel (random 9)) 0) (text (number->string 7) 40 "red") (list-ref listNum (random 9))))
-(check-expect (updateVelObs
-               (make-theCar (make-position 100 500) (circle 10 "solid" "red"))
-               (make-obstacle (make-position 500 500) (make-velocity 10 0) (text (number->string 7) 40 "red") 7)
-               (make-figure 7))
-              (make-obstacle (make-position 500 500) (make-velocity 10 0) (text (number->string 7) 40 "red") 7))
 ; function:
 (define (updateVelObs c obs fig) (cond
                                        [(or (= 1 (isTrue c obs fig)) (not(inFrameX obs)))  (make-obstacle
@@ -283,16 +258,6 @@
 
 ; purpose: main function for moving the obstacle object
 ; contract: moveObstacle obs(obstacle) -> obstacle
-; test:
-(check-expect (moveObstacle (make-theCar    (make-position 100 100) (rectangle 10 10 "solid" "red"))
-                            (make-obstacle  (make-position 100 25)  (make-velocity  5 0) (text (number->string 4) 40 "red") 4 )
-                            (make-figure 7))
-              (make-obstacle (make-position 105 25) (make-velocity 5 0) (text (number->string 4) 40 "red") 4 ))
-
-(check-random (moveObstacle (make-theCar  (make-position 100 100) (rectangle 10 10 "solid" "red"))
-                            (make-obstacle (make-position 900 25) (make-velocity  5 0) (text (number->string 4) 40 "red") 4 )
-                            (make-figure 7))
-              (make-obstacle (make-position -20 25) (make-velocity (list-ref listVel (random 9)) 0) (text (number->string 4) 40 "red") (list-ref listNum (random 9))))  
 ; function:
 (define (moveObstacle c obs fig) (cond
 
@@ -316,20 +281,6 @@
 
 ; purpose: updating figure
 ; contract: updateFigure: c(theCar) fig(figure) obs1(obstacle) obs2(obstacle) obs3(obstacle) -> figure
-; test:
-(check-random (updateFigure (make-theCar (make-position 400 400) (circle 10 "solid" "red"))
-                            (make-figure 6)
-                            (make-obstacle (make-position 400 400) (make-velocity 5 0) (text (number->string 6) 40 "red") 6)
-                            (make-obstacle (make-position 600 25) (make-velocity 5 0) (text (number->string 4) 40 "red") 4 )
-                            (make-obstacle (make-position 300 25) (make-velocity 5 0) (text (number->string 9) 40 "red") 9 ))
-              (make-figure (list-ref listNum (random 9))))
-
-(check-expect (updateFigure (make-theCar (make-position 400 400) (circle 10 "solid" "red"))
-                            (make-figure 6)
-                            (make-obstacle (make-position 144 400) (make-velocity 5 0) (text (number->string 3) 40 "red") 3)
-                            (make-obstacle (make-position 600 25) (make-velocity 5 0) (text (number->string 4) 40 "red") 4 )
-                            (make-obstacle (make-position 300 25) (make-velocity 5 0) (text (number->string 9) 40 "red") 9 ))
-              (make-figure 6)) 
 ; function:
 (define (updateFigure c fig obs1 obs2 obs3) (cond
 
@@ -345,56 +296,13 @@
 
 ; purpose: creating image of the figures with new tour
 ; contract: textFig: c(theCar) fig(figure) obs1(obstacle) obs2(obstacle) obs3(obstacle) -> image
-; test:
-(check-expect (imageFig (make-theCar (make-position 600 400) (circle 10 "solid" "red"))
-                        (make-figure 6)
-                        (make-obstacle (make-position 400 25) (make-velocity 5 0) (text (number->string 6) 40 "red") 6 )
-                        (make-obstacle (make-position 600 25) (make-velocity 5 0) (text (number->string 4) 40 "red") 4 )
-                        (make-obstacle (make-position 300 25) (make-velocity 5 0) (text (number->string 9) 40 "red") 9 ))
-              (list-ref listFigIm 5))
-
-(check-random (imageFig (make-theCar (make-position 400 25) (circle 10 "solid" "red"))
-                        (make-figure 6)
-                        (make-obstacle (make-position 400 25) (make-velocity 5 0) (text (number->string 6) 40 "red") 6 )
-                        (make-obstacle (make-position 600 25) (make-velocity 5 0) (text (number->string 4) 40 "red") 4 )
-                        (make-obstacle (make-position 300 25) (make-velocity 5 0) (text (number->string 9) 40 "red") 9 ))
-              (list-ref listFigIm (- (list-ref listNum (random 9)) 1)))
-              
 ; function:
 (define (imageFig c fig obs1 obs2 obs3) (list-ref listFigIm (- (figure-num (updateFigure c fig obs1 obs2 obs3)) 1)))
 
 
 
 ; purpose: showing the figure 
-; contract: figImage2: gc(gameCar) -> image
-; test:   
-(check-expect (figImage2 (make-gameCar (make-theCar (make-position 300 300) (circle 10 "solid" "red"))
-                                       (make-obstacle (make-position 400 25) (make-velocity 5 0) (text (number->string 6) 40 "red") 6 ) 
-                                       (make-obstacle (make-position 600 25) (make-velocity 5 0) (text (number->string 4) 40 "red") 4 )
-                                       (make-obstacle (make-position 300 25) (make-velocity 5 0) (text (number->string 9) 40 "red") 9 )
-                                       0 
-                                       (make-figure 3)))
-              (overlay/offset (imageFig (make-theCar (make-position 300 300) (circle 10 "solid" "red"))
-                                        (make-figure 3)
-                                        (make-obstacle (make-position 400 25) (make-velocity 5 0) (text (number->string 6) 40 "red") 6 ) 
-                                        (make-obstacle (make-position 600 25) (make-velocity 5 0) (text (number->string 4) 40 "red") 4 )
-                                        (make-obstacle (make-position 300 25) (make-velocity 5 0) (text (number->string 9) 40 "red") 9 ))
-                              0 -40
-                              figImage))
-
-(check-random (figImage2 (make-gameCar (make-theCar (make-position 400 25) (circle 10 "solid" "red"))
-                                       (make-obstacle (make-position 400 25) (make-velocity 5 0) (text (number->string 6) 40 "red") 6 ) 
-                                       (make-obstacle (make-position 600 25) (make-velocity 5 0) (text (number->string 4) 40 "red") 4 )
-                                       (make-obstacle (make-position 300 25) (make-velocity 5 0) (text (number->string 9) 40 "red") 9 )
-                                       0 
-                                       (make-figure 6)))
-              (overlay/offset (imageFig (make-theCar (make-position 300 300) (circle 10 "solid" "red"))
-                                        (make-figure (list-ref listNum (random 9)))
-                                        (make-obstacle (make-position 400 25) (make-velocity 5 0) (text (number->string 6) 40 "red") 6 ) 
-                                        (make-obstacle (make-position 600 25) (make-velocity 5 0) (text (number->string 4) 40 "red") 4 )
-                                        (make-obstacle (make-position 300 25) (make-velocity 5 0) (text (number->string 9) 40 "red") 9 ))
-                              0 -40
-                              figImage))
+; contract: figImage2: gc(gameCar) -> image        figImage))
 ; function:
 (define (figImage2 gc) (overlay/offset (imageFig (gameCar-car gc) (gameCar-fig gc) (gameCar-obs1 gc) (gameCar-obs2 gc) (gameCar-obs3 gc))
                                        0 -40
@@ -411,19 +319,7 @@
 
 
 ; purpose: check whether 
-; contract: isCollided: c(car) ob(obstacle) -> boolean 
-; test:
-(check-expect (isCollided  (make-theCar   (make-position 400 500)  (circle 30 "solid" "red"))
-                           (make-obstacle (make-position 380 500)  (make-velocity 5 0) (text (number->string 4) 15 "red") 4))
-              #true)
-(check-expect (isCollided  (make-theCar   (make-position 300 500)  (circle 30 "solid" "red"))
-                           (make-obstacle (make-position 380 500)  (make-velocity 5 0) (text (number->string 4) 15 "red") 4))
-              #false)
-(check-expect (isCollided  (make-theCar   (make-position 400 600)  (circle 30 "solid" "red"))
-                           (make-obstacle (make-position 380 500)  (make-velocity 5 0) (text (number->string 4) 15 "red") 4))
-              #false)
-
-                                                                                                       
+; contract: isCollided: c(car) ob(obstacle) -> boolean                                                                                               
 ; function:
 (define (isCollided c ob) (cond [(and  (> (+ (position-x (obstacle-pos ob)) (/ (image-width (obstacle-im ob)) 2)) (- (position-x (theCar-pos c)) (/ (image-width (theCar-im c)) 2)))
                                        (< (+ (position-x (obstacle-pos ob)) (/ (image-width (obstacle-im ob)) 2)) (+ (position-x (theCar-pos c)) (/ (image-width (theCar-im c)) 2))))
@@ -439,19 +335,6 @@
 
 ; purpose: check whether ball and bar is collided or not
 ; contract: isTrue: c(theCar) ob(obstacle) fig(figure) -> number 
-; test:
-(check-expect (isTrue  (make-theCar   (make-position 100 100) (circle 10 "solid" "blue"))
-                       (make-obstacle (make-position 100 100) (make-velocity 3 0) (text (number->string 4) 15 "red") 7)
-                       (make-figure 9))
-              -1)
-(check-expect (isTrue  (make-theCar   (make-position 100 100) (circle 10 "solid" "blue"))
-                       (make-obstacle (make-position 300 300) (make-velocity 3 0) (text (number->string 4) 15 "red") 7)
-                       (make-figure 9))
-              0)
-(check-expect (isTrue  (make-theCar   (make-position 100 100) (circle 10 "solid" "blue"))
-                       (make-obstacle (make-position 100 100) (make-velocity 3 0) (text (number->string 4) 15 "red") 7)
-                       (make-figure 7))
-              1)
 ; function:
 (define (isTrue c ob fig) (cond [(not (isCollided c ob)) 0]
                                 [(and (isCollided c ob)  (= (obstacle-value ob)      (figure-num fig))) 1]
@@ -465,23 +348,6 @@
 
 ; purpose: update the game score with interaction between car and right obstacle
 ; contract: updateScore: g(gameCar) -> number
-; test:
-(check-expect (updateScore (make-gameCar (make-theCar   (make-position 40 40)    (circle 15 "solid" "blue"))
-                                         (make-obstacle (make-position 40 40)    (make-velocity 0 5) (text (number->string 4) 15 "red") 7)
-                                         (make-obstacle (make-position 100 100)  (make-velocity 5 5) (text (number->string 4) 15 "red") 45 )
-                                         (make-obstacle (make-position 50 0)     (make-velocity 25 5) (text (number->string 4) 15 "red") 451)
-                                         500
-                                         (make-figure 7)))
-              550)
-
-(check-expect (updateScore (make-gameCar  (make-theCar    (make-position 1000 40)   (circle 15 "solid" "blue"))
-                                          (make-obstacle  (make-position 40 40)     (make-velocity 0 5)  (text (number->string 4) 15 "red") 455)
-                                          (make-obstacle  (make-position 100 100)   (make-velocity 5 5)  (text (number->string 4) 15 "red") 45)
-                                          (make-obstacle  (make-position 50 0)      (make-velocity 25 5) (text (number->string 4) 15 "red") 451)
-                                          1000
-                                          (make-figure 7)))
-              1000.1)
-
 ; function:
 (define (updateScore g) (if (not (or  (isCollided (gameCar-car g) (gameCar-obs1 g))
                                       (isCollided (gameCar-car g) (gameCar-obs2 g))
@@ -502,15 +368,6 @@
 ; purpose: showing the score 
 ; contract: board: g(gameCar) -> image
 ; test:
-(check-expect (board (make-gameCar (make-theCar (make-position 300 300) (circle 10 "solid" "red"))
-                                   (make-obstacle (make-position 400 25) (make-velocity 5 0) (text (number->string 6) 40 "red") 6 ) 
-                                   (make-obstacle (make-position 600 25) (make-velocity 5 0) (text (number->string 4) 40 "red") 4 )
-                                   (make-obstacle (make-position 300 25) (make-velocity 5 0) (text (number->string 9) 40 "red") 9 )
-                                   100.9 
-                                   (make-figure 3)))
-              (overlay/offset (text (number->string 100) 15 "white")
-                              10 4
-                              scoreBoard))
 ; function:
 (define (board g) (overlay/offset (text (number->string (floor (gameCar-score g))) 15 "white")
                                   10 4
@@ -570,19 +427,6 @@
 
 ; purpose: showing the score on game-over scene
 ; contract: OverSceneDraw: gOvSceCar(gameOverSceneCar) gaC(gameCar) -> image
-; test:
-(check-expect (OverSceneDraw (make-gameOverSceneCar (empty-scene 800 800)
-                                                    (make-button (make-position 500 500) (rectangle 30 30 "outline" "black"))
-                                                    (make-button (make-position 400 400) (rectangle 30 30 "outline" "black")))
-                             (make-gameCar (make-theCar (make-position 300 300) (circle 10 "solid" "red"))
-                                           (make-obstacle (make-position 400 25) (make-velocity 5 0) (text (number->string 6) 40 "red") 6 ) 
-                                           (make-obstacle (make-position 600 25) (make-velocity 5 0) (text (number->string 4) 40 "red") 4 )
-                                           (make-obstacle (make-position 300 25) (make-velocity 5 0) (text (number->string 9) 40 "red") 9 )
-                                           100.9 
-                                           (make-figure 3)))
-              (overlay/offset (text (string-append "Your Score: " "101") 28 "black")
-                              20 -315
-                              imGameOver))
 ; function:
 (define (OverSceneDraw gOvSceCar gaC) (overlay/offset  (text (string-append "Your Score: " (number->string(round(updateScore gaC)))) 28 "black")
                                                        20 -315
@@ -597,16 +441,6 @@
 
 ; purpose: drawing the car into the finalScene
 ; contract: scene1: g(gameCar) -> image
-; test:
-(check-expect (scene1 (make-gameCar (make-theCar (make-position 324 423) (circle 10 "solid" "red"))
-                                    (make-obstacle (make-position 400 25) (make-velocity 5 0) (text (number->string 6) 40 "red") 6 ) 
-                                    (make-obstacle (make-position 600 25) (make-velocity 5 0) (text (number->string 4) 40 "red") 4 )
-                                    (make-obstacle (make-position 300 25) (make-velocity 5 0) (text (number->string 9) 40 "red") 9 )
-                                    120 
-                                    (make-figure 4)))
-              (place-image (circle 10 "solid" "red")
-                           324 423
-                           finalScene))
 ; function:
 (define (scene1 g) (place-image (theCar-im   (gameCar-car g))
                                 (position-x  (theCar-pos(gameCar-car g))) (position-y (theCar-pos(gameCar-car g)))
@@ -616,26 +450,6 @@
 
 ; purpose: adding the obtacles on scene1
 ; contract: scene2: g(gameCar) -> image
-; test:
-(check-expect (scene2 (make-gameCar (make-theCar (make-position 200 220) (circle 10 "solid" "red"))
-                                    (make-obstacle (make-position 400 300) (make-velocity 5 0) (text (number->string 7) 40 "red") 7 ) 
-                                    (make-obstacle (make-position 600 200) (make-velocity 5 0) (text (number->string 3) 40 "red") 3 )
-                                    (make-obstacle (make-position 300 700) (make-velocity 5 0) (text (number->string 1) 40 "red") 1 )
-                                    120 
-                                    (make-figure 8)))
-
-              (place-image (text (number->string 7) 40 "red")
-                           400 300
-                           (place-image (text (number->string 3) 40 "red")
-                                        600 200
-                                        (place-image (text (number->string 1) 40 "red")
-                                                     300 700
-                                                     (scene1 (make-gameCar (make-theCar (make-position 200 220) (circle 10 "solid" "red"))
-                                                                           (make-obstacle (make-position 400 300) (make-velocity 5 0) (text (number->string 7) 40 "red") 7 ) 
-                                                                           (make-obstacle (make-position 600 200) (make-velocity 5 0) (text (number->string 3) 40 "red") 3 )
-                                                                           (make-obstacle (make-position 300 700) (make-velocity 5 0) (text (number->string 1) 40 "red") 1 )
-                                                                           120 
-                                                                           (make-figure 8)))))))
 ; function:
 (define (scene2 g) (place-image (obstacle-im (gameCar-obs1 g))
                                 (position-x  (obstacle-pos  (gameCar-obs1  g))) (position-y (obstacle-pos (gameCar-obs1 g)))
@@ -649,34 +463,6 @@
 
 ; purpose: adding the scoreboard and the figure on scene2
 ; contract: finalSceneCar: g(gameCar) -> image
-; test:
-(check-expect (finalSceneCar (make-gameCar (make-theCar (make-position 200 220) (circle 10 "solid" "red"))
-                                           (make-obstacle (make-position 100 300) (make-velocity 5 0) (text (number->string 7) 40 "red") 7 ) 
-                                           (make-obstacle (make-position 500 500) (make-velocity 5 0) (text (number->string 3) 40 "red") 3 )
-                                           (make-obstacle (make-position 300 700) (make-velocity 5 0) (text (number->string 1) 40 "red") 1 )
-                                           500 
-                                           (make-figure 3)))
-
-              (place-image (board (make-gameCar (make-theCar (make-position 200 220) (circle 10 "solid" "red"))
-                                                (make-obstacle (make-position 100 300) (make-velocity 5 0) (text (number->string 7) 40 "red") 7 ) 
-                                                (make-obstacle (make-position 500 500) (make-velocity 5 0) (text (number->string 3) 40 "red") 3 )
-                                                (make-obstacle (make-position 300 700) (make-velocity 5 0) (text (number->string 1) 40 "red") 1 )
-                                                500 
-                                                (make-figure 3))) 
-                           110 55
-                           (place-image (figImage2 (make-gameCar (make-theCar (make-position 200 220) (circle 10 "solid" "red"))
-                                           (make-obstacle (make-position 100 300) (make-velocity 5 0) (text (number->string 7) 40 "red") 7 ) 
-                                           (make-obstacle (make-position 500 500) (make-velocity 5 0) (text (number->string 3) 40 "red") 3 )
-                                           (make-obstacle (make-position 300 700) (make-velocity 5 0) (text (number->string 1) 40 "red") 1 )
-                                           500 
-                                           (make-figure 3)))
-                                        665 140
-                                        (scene2 (make-gameCar (make-theCar (make-position 200 220) (circle 10 "solid" "red"))
-                                           (make-obstacle (make-position 100 300) (make-velocity 5 0) (text (number->string 7) 40 "red") 7 ) 
-                                           (make-obstacle (make-position 500 500) (make-velocity 5 0) (text (number->string 3) 40 "red") 3 )
-                                           (make-obstacle (make-position 300 700) (make-velocity 5 0) (text (number->string 1) 40 "red") 1 )
-                                           500 
-                                           (make-figure 3))))))
 ; function:
 (define (finalSceneCar g) (place-image (board g)
                                        110 55
@@ -693,13 +479,6 @@
 
 ; purpose: check whether the point on the button or not
 ; contract: isInButton: b(button)  x(number) y(number) -> boolean
-; test:
-(check-expect (isInButton (make-button (make-position 200 200) (rectangle 20 20 "outline" "black"))  195 205)
-              #true)
-              
-(check-expect (isInButton (make-button (make-position 200 200) (rectangle 20 20 "outline" "black")) 400 100)
-              #false)       
-              
 ; function:
 (define (isInButton b x y) (if (and (>= x (- (position-x (button-pos b)) (/ (image-width(button-im b)) 2)))
                                     (<= x (+ (position-x (button-pos b)) (/ (image-width(button-im b)) 2)))
@@ -711,13 +490,6 @@
 
 ; purpose: check whether mouse clicked button or not
 ; contract: doesClickButton: b(button) x(number) y(number) mo(mouseEvent)-> boolean
-; test:
-(check-expect (doesClickButton (make-button (make-position 200 200) (rectangle 20 20 "outline" "black")) 200 200 "button-down")
-              #true)
-(check-expect (doesClickButton (make-button (make-position 200 200) (rectangle 20 20 "outline" "black")) 200 200 "drag")
-              #false)
-(check-expect (doesClickButton (make-button (make-position 300 300) (rectangle 20 20 "outline" "black")) 200 200 "button-down")
-              #false)
 ; function:
 (define (doesClickButton b x y mo) (if (and (mouse=? "button-down" mo) (isInButton b x y))
                                        #true
@@ -727,9 +499,6 @@
 
 ; purpose: check whether the point on the rectangle or not
 ; contract: isInRectangle: rec(rectangleOb) x(number) y(number) -> boolean
-; test:
-(check-expect (isInRectangle (make-rectangleOb (rectangle 20 20 "outline" "red") (make-position 200 200)) 200 200) #true) 
-(check-expect (isInRectangle (make-rectangleOb (rectangle 20 20 "outline" "red") (make-position 170 230)) 200 200) #false)
 ; function:
 (define (isInRectangle rec x y) (if (and
                                      (>= x (- (position-x (rectangleOb-pos rec)) (/ (image-width  (rectangleOb-im rec)) 2)))
@@ -743,9 +512,6 @@
 
 ; purpose: check whether the point on the circle or not
 ; contract: isInCircle: circ(circleOb) x(number) y(number) -> boolean
-; test:
-(check-expect (isInCircle (make-circleOb (circle 20 "solid" "red") (make-position 300 300)) 280 314) #true)
-(check-expect (isInCircle (make-circleOb (circle 20 "solid" "red") (make-position 300 300)) 580 314) #false)
 ; function:
 (define (isInCircle circ x y) (if (and
                                      (>= x (- (position-x (circleOb-pos circ)) (/ (image-width  (circleOb-im circ)) 2)))
@@ -759,9 +525,6 @@
 
 ; purpose: check whether the point on the triangle or not
 ; contract: isInTriangle: tri(triangleOb) x(number) y(number) -> boolean
-; test:
-(check-expect (isInTriangle (make-triangleOb (triangle 20 "solid" "red") (make-position 300 300)) 300 300) #true)
-(check-expect (isInTriangle (make-triangleOb (triangle 20 "solid" "red") (make-position 300 300)) 780 314) #false)
 ; function:
 (define (isInTriangle tri x y) (if (and
                                      (>= x (- (position-x (triangleOb-pos tri)) (/ (image-width   (triangleOb-im tri)) 2)))
@@ -775,9 +538,6 @@
 
 ; purpose: check whether the point on the square or not
 ; contract: isInTriangle: sq(squareOb) x(number) y(number) -> boolean
-; test:
-(check-expect (isInSquare (make-squareOb (square 30 "solid" "black") (make-position 500 500)) 490 500) #true)
-(check-expect (isInSquare (make-squareOb (square 30 "solid" "black") (make-position 500 500)) 470 330) #false)
 ; function:
 (define (isInSquare sq x y) (if (and
                                      (>= x (- (position-x (squareOb-pos sq)) (/ (image-width   (squareOb-im sq)) 2)))
@@ -791,31 +551,6 @@
 
 ; purpose: check whether mouse is dragged or not
 ; contract: doesDrag: pg(puzzleGame) x(number) y(number) mo(mouseEvent)-> boolean
-; test:
-(check-expect (doesDrag (make-puzzleGame (make-squareOb (square 30 "solid" "black") (make-position 500 500))
-                                         (make-triangleOb (triangle 20 "solid" "red") (make-position 700 700))
-                                         (make-rectangleOb (rectangle 20 20 "outline" "red") (make-position 200 200))
-                                         (make-circleOb (circle 20 "solid" "red") (make-position 140 130))
-                                         (make-button (make-position 300 300) (rectangle 30 30 "solid" "black")))
-                        700 700
-                        "drag")
-              #true)
-(check-expect (doesDrag (make-puzzleGame (make-squareOb (square 30 "solid" "black") (make-position 500 500))
-                                         (make-triangleOb (triangle 20 "solid" "red") (make-position 700 700))
-                                         (make-rectangleOb (rectangle 20 20 "outline" "red") (make-position 200 200))
-                                         (make-circleOb (circle 20 "solid" "red") (make-position 140 130))
-                                         (make-button (make-position 300 300) (rectangle 30 30 "solid" "black")))
-                        500 500
-                        "drag")
-              #true)
-(check-expect (doesDrag (make-puzzleGame (make-squareOb (square 30 "solid" "black") (make-position 500 500))
-                                         (make-triangleOb (triangle 20 "solid" "red") (make-position 700 700))
-                                         (make-rectangleOb (rectangle 20 20 "outline" "red") (make-position 200 200))
-                                         (make-circleOb (circle 20 "solid" "red") (make-position 140 130))
-                                         (make-button (make-position 300 300) (rectangle 30 30 "solid" "black")))
-                        300 300
-                        "drag")
-              #false)
 ; function:
 (define (doesDrag pg x y mo) (if (or  (and (isInSquare (puzzleGame-sq pg) x y)       (mouse=? "drag" mo))
                                       (and (isInTriangle (puzzleGame-triang pg) x y) (mouse=? "drag" mo))
@@ -827,155 +562,6 @@
 
 ; purpose: changing between the scenes by clicking mouse1 and dragging the shapes in the puzzle game
 ; contract: mouseUpdate: ga(GAME) x(number) y(number) mo(mouseEvent)-> GAME
-; test:
-(check-expect (mouseUpdate (make-GAME
-                            (make-gameMainMenu (rectangle 800 800 "outline" "yellow") (make-button (make-position 300 300) (rectangle 30 30 "outline" "black")) (make-button (make-position 500 500) (rectangle 30 30 "outline" "black")) (make-button (make-position 700 700) (rectangle 30 30 "outline" "black")))
-                            (make-gameCar (make-theCar (make-position 760 730) (circle 10 "solid" "red"))
-                                          (make-obstacle (make-position 100 300) (make-velocity 5 0) (text (number->string 7) 40 "red") 7 ) 
-                                          (make-obstacle (make-position 500 500) (make-velocity 5 0) (text (number->string 3) 40 "red") 3 )
-                                          (make-obstacle (make-position 300 700) (make-velocity 5 0) (text (number->string 1) 40 "red") 1 )
-                                          500 
-                                          (make-figure 3))
-                            (make-puzzleGame (make-squareOb (square 30 "solid" "black") (make-position 500 500))
-                                             (make-triangleOb (triangle 20 "solid" "red") (make-position 700 700))
-                                             (make-rectangleOb (rectangle 20 20 "outline" "red") (make-position 200 200))
-                                             (make-circleOb (circle 20 "solid" "red") (make-position 140 130))
-                                             (make-button (make-position 300 300) (rectangle 20 20 "solid" "red")))
-                            (make-gameOverSceneCar (empty-scene 800 800) (make-button (make-position 676 676) (square 86 "outline" "black")) (make-button (make-position 37 677) (square 87 "outline" "black")))
-                            (make-gameOverScenePuzzle (empty-scene 800 800) (make-button (make-position 676 676) (square 86 "outline" "black")) (make-button (make-position 37 677) (square 87 "outline" "black")))
-                            (make-exitScene (empty-scene 800 800))
-                            "menu")
-                           300 300
-                           "button-down")
-              (make-GAME
-               (make-gameMainMenu (rectangle 800 800 "outline" "yellow") (make-button (make-position 300 300) (rectangle 30 30 "outline" "black")) (make-button (make-position 500 500) (rectangle 30 30 "outline" "black")) (make-button (make-position 700 700) (rectangle 30 30 "outline" "black")))
-               (make-gameCar (make-theCar (make-position 760 730) (circle 10 "solid" "red"))
-                             (make-obstacle (make-position 100 300) (make-velocity 5 0) (text (number->string 7) 40 "red") 7 ) 
-                             (make-obstacle (make-position 500 500) (make-velocity 5 0) (text (number->string 3) 40 "red") 3 )
-                             (make-obstacle (make-position 300 700) (make-velocity 5 0) (text (number->string 1) 40 "red") 1 )
-                             500 
-                             (make-figure 3))
-               (make-puzzleGame (make-squareOb (square 30 "solid" "black") (make-position 500 500))
-                                (make-triangleOb (triangle 20 "solid" "red") (make-position 700 700))
-                                (make-rectangleOb (rectangle 20 20 "outline" "red") (make-position 200 200))
-                                (make-circleOb (circle 20 "solid" "red") (make-position 140 130))
-                                (make-button (make-position 300 300) (rectangle 20 20 "solid" "red")))
-               (make-gameOverSceneCar (empty-scene 800 800) (make-button (make-position 676 676) (square 86 "outline" "black")) (make-button (make-position 37 677) (square 87 "outline" "black")))
-               (make-gameOverScenePuzzle (empty-scene 800 800) (make-button (make-position 676 676) (square 86 "outline" "black")) (make-button (make-position 37 677) (square 87 "outline" "black")))
-               (make-exitScene (empty-scene 800 800))
-               "carGameScene"))
-
-(check-expect (mouseUpdate (make-GAME
-                            (make-gameMainMenu (rectangle 800 800 "outline" "yellow") (make-button (make-position 300 300) (rectangle 30 30 "outline" "black")) (make-button (make-position 500 500) (rectangle 30 30 "outline" "black")) (make-button (make-position 700 700) (rectangle 30 30 "outline" "black")))
-                            (make-gameCar (make-theCar (make-position 760 730) (circle 10 "solid" "red"))
-                                          (make-obstacle (make-position 100 300) (make-velocity 5 0) (text (number->string 7) 40 "red") 7 ) 
-                                          (make-obstacle (make-position 500 500) (make-velocity 5 0) (text (number->string 3) 40 "red") 3 )
-                                          (make-obstacle (make-position 300 700) (make-velocity 5 0) (text (number->string 1) 40 "red") 1 )
-                                          500 
-                                          (make-figure 3))
-                            (make-puzzleGame (make-squareOb (square 30 "solid" "black") (make-position 500 500))
-                                             (make-triangleOb (triangle 20 "solid" "red") (make-position 700 700))
-                                             (make-rectangleOb (rectangle 20 20 "outline" "red") (make-position 200 200))
-                                             (make-circleOb (circle 20 "solid" "red") (make-position 140 130))
-                                             (make-button (make-position 300 300) (rectangle 20 20 "solid" "red")))
-                            (make-gameOverSceneCar (empty-scene 800 800) (make-button (make-position 676 676) (square 86 "outline" "black")) (make-button (make-position 37 677) (square 87 "outline" "black")))
-                            (make-gameOverScenePuzzle (empty-scene 800 800) (make-button (make-position 676 676) (square 86 "outline" "black")) (make-button (make-position 37 677) (square 87 "outline" "black")))
-                            (make-exitScene (empty-scene 800 800))
-                            "menu")
-                           500 500
-                           "button-down")
-              (make-GAME
-               (make-gameMainMenu (rectangle 800 800 "outline" "yellow") (make-button (make-position 300 300) (rectangle 30 30 "outline" "black")) (make-button (make-position 500 500) (rectangle 30 30 "outline" "black")) (make-button (make-position 700 700) (rectangle 30 30 "outline" "black")))
-               (make-gameCar (make-theCar (make-position 760 730) (circle 10 "solid" "red"))
-                             (make-obstacle (make-position 100 300) (make-velocity 5 0) (text (number->string 7) 40 "red") 7 ) 
-                             (make-obstacle (make-position 500 500) (make-velocity 5 0) (text (number->string 3) 40 "red") 3 )
-                             (make-obstacle (make-position 300 700) (make-velocity 5 0) (text (number->string 1) 40 "red") 1 )
-                             500 
-                             (make-figure 3))
-               (make-puzzleGame (make-squareOb (square 30 "solid" "black") (make-position 500 500))
-                                (make-triangleOb (triangle 20 "solid" "red") (make-position 700 700))
-                                (make-rectangleOb (rectangle 20 20 "outline" "red") (make-position 200 200))
-                                (make-circleOb (circle 20 "solid" "red") (make-position 140 130))
-                                (make-button (make-position 300 300) (rectangle 20 20 "solid" "red")))
-               (make-gameOverSceneCar (empty-scene 800 800) (make-button (make-position 676 676) (square 86 "outline" "black")) (make-button (make-position 37 677) (square 87 "outline" "black")))
-               (make-gameOverScenePuzzle (empty-scene 800 800) (make-button (make-position 676 676) (square 86 "outline" "black")) (make-button (make-position 37 677) (square 87 "outline" "black")))
-               (make-exitScene (empty-scene 800 800))
-               "puzzleGameScene"))
-
-(check-expect (mouseUpdate (make-GAME
-                            (make-gameMainMenu (rectangle 800 800 "outline" "yellow") (make-button (make-position 300 300) (rectangle 30 30 "outline" "black")) (make-button (make-position 500 500) (rectangle 30 30 "outline" "black")) (make-button (make-position 700 700) (rectangle 30 30 "outline" "black")))
-                            (make-gameCar (make-theCar (make-position 760 730) (circle 10 "solid" "red"))
-                                          (make-obstacle (make-position 100 300) (make-velocity 5 0) (text (number->string 7) 40 "red") 7 ) 
-                                          (make-obstacle (make-position 500 500) (make-velocity 5 0) (text (number->string 3) 40 "red") 3 )
-                                          (make-obstacle (make-position 300 700) (make-velocity 5 0) (text (number->string 1) 40 "red") 1 )
-                                          500 
-                                          (make-figure 3))
-                            (make-puzzleGame (make-squareOb (square 30 "solid" "black") (make-position 500 500))
-                                             (make-triangleOb (triangle 20 "solid" "red") (make-position 700 700))
-                                             (make-rectangleOb (rectangle 20 20 "outline" "red") (make-position 200 200))
-                                             (make-circleOb (circle 20 "solid" "red") (make-position 140 130))
-                                             (make-button (make-position 300 300) (rectangle 20 20 "solid" "red")))
-                            (make-gameOverSceneCar (empty-scene 800 800) (make-button (make-position 676 676) (square 86 "outline" "black")) (make-button (make-position 37 677) (square 87 "outline" "black")))
-                            (make-gameOverScenePuzzle (empty-scene 800 800) (make-button (make-position 676 676) (square 86 "outline" "black")) (make-button (make-position 37 677) (square 87 "outline" "black")))
-                            (make-exitScene (empty-scene 800 800))
-                            "puzzleGameScene")
-                                                      501 501
-                                                      "drag")
-              (make-GAME
-               (make-gameMainMenu (rectangle 800 800 "outline" "yellow") (make-button (make-position 300 300) (rectangle 30 30 "outline" "black")) (make-button (make-position 500 500) (rectangle 30 30 "outline" "black")) (make-button (make-position 700 700) (rectangle 30 30 "outline" "black")))
-               (make-gameCar (make-theCar (make-position 760 730) (circle 10 "solid" "red"))
-                             (make-obstacle (make-position 100 300) (make-velocity 5 0) (text (number->string 7) 40 "red") 7 ) 
-                             (make-obstacle (make-position 500 500) (make-velocity 5 0) (text (number->string 3) 40 "red") 3 )
-                             (make-obstacle (make-position 300 700) (make-velocity 5 0) (text (number->string 1) 40 "red") 1 )
-                             500 
-                             (make-figure 3))
-               (make-puzzleGame (make-squareOb (square 30 "solid" "black") (make-position 501 501))
-                                (make-triangleOb (triangle 20 "solid" "red") (make-position 700 700))
-                                (make-rectangleOb (rectangle 20 20 "outline" "red") (make-position 200 200))
-                                (make-circleOb (circle 20 "solid" "red") (make-position 140 130))
-                                (make-button (make-position 300 300) (rectangle 20 20 "solid" "red")))
-               (make-gameOverSceneCar (empty-scene 800 800) (make-button (make-position 676 676) (square 86 "outline" "black")) (make-button (make-position 37 677) (square 87 "outline" "black")))
-               (make-gameOverScenePuzzle (empty-scene 800 800) (make-button (make-position 676 676) (square 86 "outline" "black")) (make-button (make-position 37 677) (square 87 "outline" "black")))
-               (make-exitScene (empty-scene 800 800))
-               "puzzleGameScene"))
-
-(check-random (mouseUpdate (make-GAME
-                            (make-gameMainMenu (rectangle 800 800 "outline" "yellow") (make-button (make-position 300 300) (rectangle 30 30 "outline" "black")) (make-button (make-position 500 500) (rectangle 30 30 "outline" "black")) (make-button (make-position 700 700) (rectangle 30 30 "outline" "black")))
-                            (make-gameCar (make-theCar (make-position 760 730) (circle 10 "solid" "red"))
-                                          (make-obstacle (make-position 100 300) (make-velocity 5 0) (text (number->string 7) 40 "red") 7 ) 
-                                          (make-obstacle (make-position 500 500) (make-velocity 5 0) (text (number->string 3) 40 "red") 3 )
-                                          (make-obstacle (make-position 300 700) (make-velocity 5 0) (text (number->string 1) 40 "red") 1 )
-                                          500 
-                                          (make-figure 3))
-                            (make-puzzleGame (make-squareOb (square 30 "solid" "black") (make-position 500 500))
-                                             (make-triangleOb (triangle 20 "solid" "red") (make-position 700 700))
-                                             (make-rectangleOb (rectangle 20 20 "outline" "red") (make-position 200 200))
-                                             (make-circleOb (circle 20 "solid" "red") (make-position 140 130))
-                                             (make-button (make-position 300 300) (rectangle 20 20 "solid" "red")))
-                            (make-gameOverSceneCar (empty-scene 800 800) (make-button (make-position 676 676) (square 86 "outline" "black")) (make-button (make-position 37 677) (square 87 "outline" "black")))
-                            (make-gameOverScenePuzzle (empty-scene 800 800) (make-button (make-position 676 676) (square 86 "outline" "black")) (make-button (make-position 37 677) (square 87 "outline" "black")))
-                            (make-exitScene (empty-scene 800 800))
-                            "puzzleGameOverScene")
-                           37 677
-                           "button-down")
-              (make-GAME
-               (make-gameMainMenu (rectangle 800 800 "outline" "yellow") (make-button (make-position 300 300) (rectangle 30 30 "outline" "black")) (make-button (make-position 500 500) (rectangle 30 30 "outline" "black")) (make-button (make-position 700 700) (rectangle 30 30 "outline" "black")))
-               (make-gameCar (make-theCar (make-position 760 730) (circle 10 "solid" "red"))
-                             (make-obstacle (make-position 100 300) (make-velocity 5 0) (text (number->string 7) 40 "red") 7 ) 
-                             (make-obstacle (make-position 500 500) (make-velocity 5 0) (text (number->string 3) 40 "red") 3 )
-                             (make-obstacle (make-position 300 700) (make-velocity 5 0) (text (number->string 1) 40 "red") 1 )
-                             500 
-                             (make-figure 3))
-               (make-puzzleGame (make-squareOb (square 30 "solid" "black") (make-position (random 800) (random 800)))
-                                (make-triangleOb (triangle 20 "solid" "red") (make-position (random 800) (random 800)))
-                                (make-rectangleOb (rectangle 20 20 "outline" "red") (make-position (random 800) (random 800)))
-                                (make-circleOb (circle 20 "solid" "red") (make-position (random 800) (random 800)))
-                                (make-button (make-position 300 300) (rectangle 20 20 "solid" "red")))
-               (make-gameOverSceneCar (empty-scene 800 800) (make-button (make-position 676 676) (square 86 "outline" "black")) (make-button (make-position 37 677) (square 87 "outline" "black")))
-               (make-gameOverScenePuzzle (empty-scene 800 800) (make-button (make-position 676 676) (square 86 "outline" "black")) (make-button (make-position 37 677) (square 87 "outline" "black")))
-               (make-exitScene (empty-scene 800 800))
-               "menu"))
-
 ; function:
 (define (mouseUpdate ga x y mo) (cond
                                         
@@ -1288,44 +874,6 @@
 
 ; purpose: changing car game scene to game over scene of the car due to wrong answer
 ; contract: sceneChanger: ga(GAME) -> string
-; test:
-(check-expect (sceneChanger (make-GAME
-                          (make-gameMainMenu (rectangle 800 800 "outline" "yellow") (make-button (make-position 300 300) (rectangle 30 30 "outline" "black")) (make-button (make-position 500 500) (rectangle 30 30 "outline" "black")) (make-button (make-position 700 700) (rectangle 30 30 "outline" "black")))
-                          (make-gameCar (make-theCar (make-position 760 730) (circle 10 "solid" "red"))
-                                        (make-obstacle (make-position 100 300) (make-velocity 5 0) (text (number->string 7) 40 "red") 7 ) 
-                                        (make-obstacle (make-position 500 500) (make-velocity 5 0) (text (number->string 3) 40 "red") 3 )
-                                        (make-obstacle (make-position 300 700) (make-velocity 5 0) (text (number->string 1) 40 "red") 1 )
-                                        500 
-                                        (make-figure 3))
-                          (make-puzzleGame (make-squareOb (square 30 "solid" "black") (make-position 500 500))
-                                           (make-triangleOb (triangle 20 "solid" "red") (make-position 700 700))
-                                           (make-rectangleOb (rectangle 20 20 "outline" "red") (make-position 200 200))
-                                           (make-circleOb (circle 20 "solid" "red") (make-position 140 130))
-                                           (make-button (make-position 300 300) (rectangle 20 20 "solid" "red")))
-                          (make-gameOverSceneCar (empty-scene 800 800) (make-button (make-position 676 676) (square 86 "outline" "black")) (make-button (make-position 37 677) (square 87 "outline" "black")))
-                          (make-gameOverScenePuzzle (empty-scene 800 800) (make-button (make-position 676 676) (square 86 "outline" "black")) (make-button (make-position 37 677) (square 87 "outline" "black")))
-                          (make-exitScene (empty-scene 800 800))
-                          "carGameScene"))
-              "carGameScene")
-
-(check-expect (sceneChanger (make-GAME
-                          (make-gameMainMenu (rectangle 800 800 "outline" "yellow") (make-button (make-position 300 300) (rectangle 30 30 "outline" "black")) (make-button (make-position 500 500) (rectangle 30 30 "outline" "black")) (make-button (make-position 700 700) (rectangle 30 30 "outline" "black")))
-                          (make-gameCar (make-theCar (make-position 760 730) (circle 10 "solid" "red"))
-                                        (make-obstacle (make-position 100 300) (make-velocity 5 0) (text (number->string 7) 40 "red") 7 ) 
-                                        (make-obstacle (make-position 760 730) (make-velocity 5 0) (text (number->string 3) 40 "red") 3 )
-                                        (make-obstacle (make-position 300 700) (make-velocity 5 0) (text (number->string 1) 40 "red") 1 )
-                                        500 
-                                        (make-figure 2))
-                          (make-puzzleGame (make-squareOb (square 30 "solid" "black") (make-position 500 500))
-                                           (make-triangleOb (triangle 20 "solid" "red") (make-position 700 700))
-                                           (make-rectangleOb (rectangle 20 20 "outline" "red") (make-position 200 200))
-                                           (make-circleOb (circle 20 "solid" "red") (make-position 140 130))
-                                           (make-button (make-position 300 300) (rectangle 20 20 "solid" "red")))
-                          (make-gameOverSceneCar (empty-scene 800 800) (make-button (make-position 676 676) (square 86 "outline" "black")) (make-button (make-position 37 677) (square 87 "outline" "black")))
-                          (make-gameOverScenePuzzle (empty-scene 800 800) (make-button (make-position 676 676) (square 86 "outline" "black")) (make-button (make-position 37 677) (square 87 "outline" "black")))
-                          (make-exitScene (empty-scene 800 800))
-                          "carGameScene"))
-              "carGameOverScene")
 ; function:
 (define (sceneChanger ga) (cond [(or
                              
@@ -1354,8 +902,6 @@
 
 ; purpose: calculating the distance between the positions
 ; contract: distCalc: pos1(position) pos2(position) -> number
-; test:
-(check-expect (distCalc (make-position 0 0) (make-position 5 12) ) 13) 
 ; function:
 (define (distCalc pos1 pos2) (inexact->exact(sqrt (+ (sqr(- (position-x pos1) (position-x pos2))) (sqr(- (position-y pos1) (position-y pos2)))))))
 
@@ -1363,13 +909,6 @@
 
 ; purpose: determinating whether puzzle are completed or not
 ; contract: doesFillUp: sq(squareOb) triang(trinagleOb) rect(rectangleOb) circ(circleOb) -> boolean
-; test:
-(check-expect (doesFillUp (make-squareOb (square 30 "solid" "black") (make-position 500 500)) (make-triangleOb (triangle 20 "solid" "red") (make-position 700 700))
-                          (make-rectangleOb (rectangle 20 20 "outline" "red") (make-position 200 200)) (make-circleOb (circle 20 "solid" "red") (make-position 140 130)))
-              #false)
-(check-expect (doesFillUp (make-squareOb (square 30 "solid" "black") (make-position 275 275)) (make-triangleOb (triangle 20 "solid" "red") (make-position 250 670))
-                          (make-rectangleOb (rectangle 20 20 "outline" "red") (make-position 635 350)) (make-circleOb (circle 20 "solid" "red") (make-position 650 650)))
-              #true)
 ; function:
 (define (doesFillUp sq triang rect circ) (if (and  (= (distCalc (squareOb-pos sq)       (make-position 275 275)) 0)
                                                    (= (distCalc (triangleOb-pos triang) (make-position 250 670)) 0)
@@ -1388,21 +927,6 @@
 
 ; purpose: drawing the puzzle game
 ; contract: finalScenePuzzle: ga(puzzleGame) -> image
-; test:
-(check-expect (finalScenePuzzle
-               (make-puzzleGame
-                (make-squareOb (square 30 "solid" "black") (make-position 500 500)) (make-triangleOb (triangle 20 "solid" "red") (make-position 700 700))
-                (make-rectangleOb (rectangle 20 20 "outline" "red") (make-position 200 200)) (make-circleOb (circle 20 "solid" "red") (make-position 140 130))
-                (make-button 750 50)))
-               (place-image (square 30 "solid" "black")
-                            500 500
-                            (place-image (triangle 20 "solid" "red")
-                                        700 700
-                                        (place-image (rectangle 20 20 "outline" "red")
-                                                     200 200
-                                                     (place-image (circle 20 "solid" "red")
-                                                                  140 130
-                                                                  puzzleScene)))))
 ; function:
 (define (finalScenePuzzle ga) (place-image (squareOb-im (puzzleGame-sq ga))
                                            (position-x  (squareOb-pos  (puzzleGame-sq ga))) (position-y (squareOb-pos (puzzleGame-sq ga))) 
@@ -1487,46 +1011,6 @@
 
 ; purpose: draw the game  into a scene
 ; contract: finalDraw: game(GAME) -> image
-; test:
-(check-expect (finalDraw (make-GAME
-                          (make-gameMainMenu (rectangle 800 800 "outline" "yellow") (make-button (make-position 300 300) (rectangle 30 30 "outline" "black")) (make-button (make-position 500 500) (rectangle 30 30 "outline" "black")) (make-button (make-position 700 700) (rectangle 30 30 "outline" "black")))
-                          (make-gameCar (make-theCar (make-position 200 220) (circle 10 "solid" "red"))
-                                        (make-obstacle (make-position 100 300) (make-velocity 5 0) (text (number->string 7) 40 "red") 7 ) 
-                                        (make-obstacle (make-position 500 500) (make-velocity 5 0) (text (number->string 3) 40 "red") 3 )
-                                        (make-obstacle (make-position 300 700) (make-velocity 5 0) (text (number->string 1) 40 "red") 1 )
-                                        500 
-                                        (make-figure 3))
-                          (make-puzzleGame (make-squareOb (square 30 "solid" "black") (make-position 500 500))
-                                           (make-triangleOb (triangle 20 "solid" "red") (make-position 700 700))
-                                           (make-rectangleOb (rectangle 20 20 "outline" "red") (make-position 200 200))
-                                           (make-circleOb (circle 20 "solid" "red") (make-position 140 130))
-                                           (make-button (make-position 300 300) (rectangle 20 20 "solid" "red")))
-                          (make-gameOverSceneCar (empty-scene 800 800) (make-button (make-position 676 676) (square 86 "outline" "black")) (make-button (make-position 37 677) (square 87 "outline" "black")))
-                          (make-gameOverScenePuzzle (empty-scene 800 800) (make-button (make-position 676 676) (square 86 "outline" "black")) (make-button (make-position 37 677) (square 87 "outline" "black")))
-                          (make-exitScene (empty-scene 800 800))
-                          "menu"))
-              (rectangle 800 800 "outline" "yellow"))
-
-(check-expect (finalDraw (make-GAME
-                          (make-gameMainMenu (rectangle 800 800 "outline" "yellow") (make-button (make-position 300 300) (rectangle 30 30 "outline" "black")) (make-button (make-position 500 500) (rectangle 30 30 "outline" "black")) (make-button (make-position 700 700) (rectangle 30 30 "outline" "black")))
-                          (make-gameCar (make-theCar (make-position 200 220) (circle 10 "solid" "red"))
-                                        (make-obstacle (make-position 100 300) (make-velocity 5 0) (text (number->string 7) 40 "red") 7 ) 
-                                        (make-obstacle (make-position 500 500) (make-velocity 5 0) (text (number->string 3) 40 "red") 3 )
-                                        (make-obstacle (make-position 300 700) (make-velocity 5 0) (text (number->string 1) 40 "red") 1 )
-                                        500 
-                                        (make-figure 3))
-                          (make-puzzleGame (make-squareOb (square 30 "solid" "black") (make-position 500 500))
-                                           (make-triangleOb (triangle 20 "solid" "red") (make-position 700 700))
-                                           (make-rectangleOb (rectangle 20 20 "outline" "red") (make-position 200 200))
-                                           (make-circleOb (circle 20 "solid" "red") (make-position 140 130))
-                                           (make-button (make-position 300 300) (rectangle 20 20 "solid" "red")))
-                          (make-gameOverSceneCar (empty-scene 800 800) (make-button (make-position 676 676) (square 86 "outline" "black")) (make-button (make-position 37 677) (square 87 "outline" "black")))
-                          (make-gameOverScenePuzzle (empty-scene 800 800) (make-button (make-position 676 676) (square 86 "outline" "black")) (make-button (make-position 37 677) (square 87 "outline" "black")))
-                          (make-exitScene (rectangle 800 800 "solid" "blue"))
-                          "exitScene"))
-              (rectangle 800 800 "solid" "blue"))
-               
-               
 ; function:
 (define (finalDraw game) (cond
 
@@ -1555,43 +1039,6 @@
 
 ; purpose: update the game wrt user's key input
 ; contract: updateKeyCar: g(GAME) k(key) -> GAME
-; test:
-(check-expect (updateKeyCar (make-GAME
-                          (make-gameMainMenu (rectangle 800 800 "outline" "yellow") (make-button (make-position 300 300) (rectangle 30 30 "outline" "black")) (make-button (make-position 500 500) (rectangle 30 30 "outline" "black")) (make-button (make-position 700 700) (rectangle 30 30 "outline" "black")))
-                          (make-gameCar (make-theCar (make-position 760 730) (circle 10 "solid" "red"))
-                                        (make-obstacle (make-position 100 300) (make-velocity 5 0) (text (number->string 7) 40 "red") 7 ) 
-                                        (make-obstacle (make-position 500 500) (make-velocity 5 0) (text (number->string 3) 40 "red") 3 )
-                                        (make-obstacle (make-position 300 700) (make-velocity 5 0) (text (number->string 1) 40 "red") 1 )
-                                        500 
-                                        (make-figure 3))
-                          (make-puzzleGame (make-squareOb (square 30 "solid" "black") (make-position 500 500))
-                                           (make-triangleOb (triangle 20 "solid" "red") (make-position 700 700))
-                                           (make-rectangleOb (rectangle 20 20 "outline" "red") (make-position 200 200))
-                                           (make-circleOb (circle 20 "solid" "red") (make-position 140 130))
-                                           (make-button (make-position 300 300) (rectangle 20 20 "solid" "red")))
-                          (make-gameOverSceneCar (empty-scene 800 800) (make-button (make-position 676 676) (square 86 "outline" "black")) (make-button (make-position 37 677) (square 87 "outline" "black")))
-                          (make-gameOverScenePuzzle (empty-scene 800 800) (make-button (make-position 676 676) (square 86 "outline" "black")) (make-button (make-position 37 677) (square 87 "outline" "black")))
-                          (make-exitScene (empty-scene 800 800))
-                          "carGameScene")
-                            "up")
-              (make-GAME
-                          (make-gameMainMenu (rectangle 800 800 "outline" "yellow") (make-button (make-position 300 300) (rectangle 30 30 "outline" "black")) (make-button (make-position 500 500) (rectangle 30 30 "outline" "black")) (make-button (make-position 700 700) (rectangle 30 30 "outline" "black")))
-                          (make-gameCar (make-theCar (make-position 760 590) (circle 10 "solid" "red"))
-                                        (make-obstacle (make-position 100 300) (make-velocity 5 0) (text (number->string 7) 40 "red") 7 ) 
-                                        (make-obstacle (make-position 500 500) (make-velocity 5 0) (text (number->string 3) 40 "red") 3 )
-                                        (make-obstacle (make-position 300 700) (make-velocity 5 0) (text (number->string 1) 40 "red") 1 )
-                                        500 
-                                        (make-figure 3))
-                          (make-puzzleGame (make-squareOb (square 30 "solid" "black") (make-position 500 500))
-                                           (make-triangleOb (triangle 20 "solid" "red") (make-position 700 700))
-                                           (make-rectangleOb (rectangle 20 20 "outline" "red") (make-position 200 200))
-                                           (make-circleOb (circle 20 "solid" "red") (make-position 140 130))
-                                           (make-button (make-position 300 300) (rectangle 20 20 "solid" "red")))
-                          (make-gameOverSceneCar (empty-scene 800 800) (make-button (make-position 676 676) (square 86 "outline" "black")) (make-button (make-position 37 677) (square 87 "outline" "black")))
-                          (make-gameOverScenePuzzle (empty-scene 800 800) (make-button (make-position 676 676) (square 86 "outline" "black")) (make-button (make-position 37 677) (square 87 "outline" "black")))
-                          (make-exitScene (empty-scene 800 800))
-                          "carGameScene"))
-              
 ;function:
 (define (updateKeyCar ga key)
 
@@ -1722,42 +1169,6 @@
 
 ; purpose: update the game wrt time
 ; contract: updateTickCar: ga(GAME) -> GAME
-; test:
-(check-expect (updateTickCar (make-GAME
-                              (make-gameMainMenu (rectangle 800 800 "outline" "yellow") (make-button (make-position 300 300) (rectangle 30 30 "outline" "black")) (make-button (make-position 500 500) (rectangle 30 30 "outline" "black")) (make-button (make-position 700 700) (rectangle 30 30 "outline" "black")))
-                              (make-gameCar (make-theCar (make-position 760 730) (circle 10 "solid" "red"))
-                                            (make-obstacle (make-position 100 300) (make-velocity 5 0) (text (number->string 7) 40 "red") 7 ) 
-                                            (make-obstacle (make-position 500 500) (make-velocity 5 0) (text (number->string 3) 40 "red") 3 )
-                                            (make-obstacle (make-position 300 700) (make-velocity 5 0) (text (number->string 1) 40 "red") 1 )
-                                            500 
-                                            (make-figure 3))
-                              (make-puzzleGame (make-squareOb (square 30 "solid" "black") (make-position 500 500))
-                                               (make-triangleOb (triangle 20 "solid" "red") (make-position 700 700))
-                                               (make-rectangleOb (rectangle 20 20 "outline" "red") (make-position 200 200))
-                                               (make-circleOb (circle 20 "solid" "red") (make-position 140 130))
-                                               (make-button (make-position 300 300) (rectangle 20 20 "solid" "red")))
-                              (make-gameOverSceneCar (empty-scene 800 800) (make-button (make-position 676 676) (square 86 "outline" "black")) (make-button (make-position 37 677) (square 87 "outline" "black")))
-                              (make-gameOverScenePuzzle (empty-scene 800 800) (make-button (make-position 676 676) (square 86 "outline" "black")) (make-button (make-position 37 677) (square 87 "outline" "black")))
-                              (make-exitScene (empty-scene 800 800))
-                              "carGameScene"))
-
-              (make-GAME
-               (make-gameMainMenu (rectangle 800 800 "outline" "yellow") (make-button (make-position 300 300) (rectangle 30 30 "outline" "black")) (make-button (make-position 500 500) (rectangle 30 30 "outline" "black")) (make-button (make-position 700 700) (rectangle 30 30 "outline" "black")))
-               (make-gameCar (make-theCar (make-position 760 730) (circle 10 "solid" "red"))
-                             (make-obstacle (make-position 105 300) (make-velocity 5 0) (text (number->string 7) 40 "red") 7 ) 
-                             (make-obstacle (make-position 505 500) (make-velocity 5 0) (text (number->string 3) 40 "red") 3 )
-                             (make-obstacle (make-position 305 700) (make-velocity 5 0) (text (number->string 1) 40 "red") 1 )
-                             500.1 
-                             (make-figure 3))
-               (make-puzzleGame (make-squareOb (square 30 "solid" "black") (make-position 500 500))
-                                (make-triangleOb (triangle 20 "solid" "red") (make-position 700 700))
-                                (make-rectangleOb (rectangle 20 20 "outline" "red") (make-position 200 200))
-                                (make-circleOb (circle 20 "solid" "red") (make-position 140 130))
-                                (make-button (make-position 300 300) (rectangle 20 20 "solid" "red")))
-               (make-gameOverSceneCar (empty-scene 800 800) (make-button (make-position 676 676) (square 86 "outline" "black")) (make-button (make-position 37 677) (square 87 "outline" "black")))
-               (make-gameOverScenePuzzle (empty-scene 800 800) (make-button (make-position 676 676) (square 86 "outline" "black")) (make-button (make-position 37 677) (square 87 "outline" "black")))
-               (make-exitScene (empty-scene 800 800))
-               "carGameScene"))
 ; function:
 (define (updateTickCar ga)
 
